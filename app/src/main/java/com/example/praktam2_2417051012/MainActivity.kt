@@ -1,62 +1,130 @@
 package com.example.praktam2_2417051012
 
-import model.Travel
-import model.TravelSource
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.layout.ContentScale.Companion.Crop
-import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
-import com.example.praktam2_2417051012.ui.theme.PrakTAM2_2417051012Theme
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import model.Travel
+import model.TravelSource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            PrakTAM2_2417051012Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(innerPadding)
-                }
+            MaterialTheme {
+                TravelPlannerScreen()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(innerPadding: PaddingValues) {
-    val travel = TravelSource.dummyTravel[0]
+fun TravelPlannerScreen() {
 
-    Column(modifier = Modifier.fillMaxSize().padding(all = 30.dp)) {
-        Image(
-            painter = painterResource(id = travel.ImageRes),
-            contentDescription = travel.nama,
-            modifier = Modifier.size(200.dp),
-            contentScale = Crop
+    var selectedLocation by remember { mutableStateOf("Semua") }
+
+    val lokasiList = listOf("Semua", "Bali", "Bandung", "Malang")
+
+    val filteredList = if (selectedLocation == "Semua") {
+        TravelSource.dummyTravel
+    } else {
+        TravelSource.dummyTravel.filter { it.lokasi == selectedLocation }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+
+        Text(
+            text = "TripNest - Travel Planner",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
         )
-        Text(text = "Nama: ${travel.nama}")
-        Text(text = "Deskripsi: ${travel.deskripsi}")
-        Text(text= "Harga: ${travel.harga}")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Pilih Lokasi:",
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            lokasiList.forEach { lokasi ->
+                Button(
+                    onClick = { selectedLocation = lokasi }
+                ) {
+                    Text(lokasi)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(
+            text = "Rekomendasi Destinasi",
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyColumn {
+            items(filteredList) { travel ->
+                TravelItem(travel)
+            }
+        }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    PrakTAM2_2417051012Theme {
-        Greeting(PaddingValues(0.dp))
+fun TravelItem(travel: Travel) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+
+        Column(modifier = Modifier.padding(12.dp)) {
+
+            Image(
+                painter = painterResource(id = travel.imageRes),
+                contentDescription = travel.nama,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = travel.nama,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+
+            Text(text = "Lokasi: ${travel.lokasi}")
+            Text(text = travel.deskripsi)
+            Text(text = "Harga Tiket: Rp ${travel.harga}")
+        }
     }
 }
