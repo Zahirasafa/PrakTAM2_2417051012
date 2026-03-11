@@ -7,26 +7,23 @@ object TravelSource {
     val dummyTravel = listOf(
 
         Travel(
-            nama = "Pantai Kuta",
-            lokasi = "Bali",
-            deskripsi = "Pantai terkenal di Bali dengan pasir putih dan sunset yang indah.",
-            harga = 20000,
+            nama = "Pantai Kuta - Bali",
+            deskripsi = "Pantai terkenal di Bali dengan pasir putih dan pemandangan sunset yang indah.",
+            harga = "Rp 10.000 - Rp 25.000",
             imageRes = R.drawable.pantaikuta
         ),
 
         Travel(
-            nama = "Gedung Sate",
-            lokasi = "Bandung",
-            deskripsi = "Ikon kota Bandung dengan arsitektur khas dan spot foto menarik.",
-            harga = 15000,
+            nama = "Gedung Sate - Bandung",
+            deskripsi = "Bangunan ikonik di Bandung yang memiliki arsitektur unik dan museum sejarah.",
+            harga = "Rp 5.000 - Rp 20.000",
             imageRes = R.drawable.bandung
         ),
 
         Travel(
-            nama = "Gunung Bromo",
-            lokasi = "Malang",
-            deskripsi = "Destinasi wisata alam dengan pemandangan sunrise yang menakjubkan.",
-            harga = 40000,
+            nama = "Gunung Bromo - Malang",
+            deskripsi = "Destinasi wisata alam terkenal dengan pemandangan sunrise dan lautan pasir.",
+            harga = "Rp 30.000 - Rp 50.000",
             imageRes = R.drawable.bromo
         )
     )

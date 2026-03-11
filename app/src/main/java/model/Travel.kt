@@ -4,8 +4,7 @@ import androidx.annotation.DrawableRes
 
 data class Travel(
     val nama: String,
-    val lokasi: String,
     val deskripsi: String,
-    val harga: Int,
+    val harga: String,
     @DrawableRes val imageRes: Int
 )

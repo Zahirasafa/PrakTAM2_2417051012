@@ -5,16 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import model.Travel
 import model.TravelSource
 
@@ -23,108 +23,68 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                TravelPlannerScreen()
+                DaftarTravelScreen()
             }
         }
     }
 }
 
 @Composable
-fun TravelPlannerScreen() {
-
-    var selectedLocation by remember { mutableStateOf("Semua") }
-
-    val lokasiList = listOf("Semua", "Bali", "Bandung", "Malang")
-
-    val filteredList = if (selectedLocation == "Semua") {
-        TravelSource.dummyTravel
-    } else {
-        TravelSource.dummyTravel.filter { it.lokasi == selectedLocation }
-    }
+fun DaftarTravelScreen() {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
 
-        Text(
-            text = "TripNest - Travel Planner",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
+        TravelSource.dummyTravel.forEach { travel ->
 
-        Spacer(modifier = Modifier.height(16.dp))
+            DetailScreen(travel)
 
-        Text(
-            text = "Pilih Lokasi:",
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            lokasiList.forEach { lokasi ->
-                Button(
-                    onClick = { selectedLocation = lokasi }
-                ) {
-                    Text(lokasi)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text(
-            text = "Rekomendasi Destinasi",
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        LazyColumn {
-            items(filteredList) { travel ->
-                TravelItem(travel)
-            }
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
-fun TravelItem(travel: Travel) {
+fun DetailScreen(travel: Travel) {
 
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
     ) {
 
-        Column(modifier = Modifier.padding(12.dp)) {
+        Image(
+            painter = painterResource(id = travel.imageRes),
+            contentDescription = travel.nama,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        )
 
-            Image(
-                painter = painterResource(id = travel.imageRes),
-                contentDescription = travel.nama,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp),
-                contentScale = ContentScale.Crop
-            )
+        Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = travel.nama,
+            fontWeight = FontWeight.Bold
+        )
 
-            Text(
-                text = travel.nama,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
+        Spacer(modifier = Modifier.height(4.dp))
 
-            Text(text = "Lokasi: ${travel.lokasi}")
-            Text(text = travel.deskripsi)
-            Text(text = "Harga Tiket: Rp ${travel.harga}")
+        Text(text = travel.deskripsi)
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(text = "Harga Tiket: ${travel.harga}")
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = { },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Detail")
         }
     }
 }
