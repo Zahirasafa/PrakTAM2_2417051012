@@ -22,12 +22,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import model.Travel
 import model.TravelSource
+import com.example.praktam2_2417051012.ui.theme.TravelAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            TravelAppTheme {
                 DaftarTravelScreen()
             }
         }
