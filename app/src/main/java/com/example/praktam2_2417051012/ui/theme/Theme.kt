@@ -5,11 +5,12 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val TravelColorScheme = lightColorScheme(
-    primary = BluePrimary,
-    secondary = BlueSecondary,
-    background = CreamBackground,
+    primary = YellowPrimary,
+    secondary = YellowSecondary,
+    background = YellowBackground,
     surface = WhiteSurface,
-    onPrimary = OnPrimaryColor
+    onPrimary = OnPrimaryColor,
+    onSurface = OnSurfaceColor
 )
 
 @Composable
