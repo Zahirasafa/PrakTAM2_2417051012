@@ -1,1 +1,0 @@
-package com.example.praktam2_2417051012.model

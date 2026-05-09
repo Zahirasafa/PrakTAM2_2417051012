@@ -1,6 +1,7 @@
 package com.example.praktam2_2417051012
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -41,7 +42,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,12 +52,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.praktam2_2417051012.model.Travel
-import com.example.praktam2_2417051012.network.RetrofitClient
+import com.example.praktam2_2417051012.data.model.Travel
+import com.example.praktam2_2417051012.data.repository.TravelRepository
 import com.example.praktam2_2417051012.ui.theme.Praktam2_2417051012Theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.util.Log
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,16 +103,19 @@ fun DaftarTravelScreen(
     navController: NavHostController,
     onTravelsLoaded: (List<Travel>) -> Unit = {}
 ) {
+    val repository = remember { TravelRepository() }
+
     var travels by remember { mutableStateOf<List<Travel>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        isLoading = true
         try {
-            travels = RetrofitClient.instance.getTravels()
+            travels = repository.getTravels()
             onTravelsLoaded(travels)
             isLoading = false
-            isError = false
+            isError = travels.isEmpty()
         } catch (e: Exception) {
             Log.e("API_ERROR", e.toString(), e)
             isLoading = false
@@ -230,8 +232,6 @@ fun TravelRowItem(
             AsyncImage(
                 model = travel.imageUrl,
                 contentDescription = travel.nama,
-                placeholder = painterResource(id = R.drawable.pantaikuta),
-                error = painterResource(id = R.drawable.pantaikuta),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(88.dp),
@@ -285,8 +285,6 @@ fun TravelListItem(
             AsyncImage(
                 model = travel.imageUrl,
                 contentDescription = travel.nama,
-                placeholder = painterResource(id = R.drawable.pantaikuta),
-                error = painterResource(id = R.drawable.pantaikuta),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp),
@@ -357,8 +355,6 @@ fun DetailScreen(
                 AsyncImage(
                     model = travel.imageUrl,
                     contentDescription = travel.nama,
-                    placeholder = painterResource(id = R.drawable.pantaikuta),
-                    error = painterResource(id = R.drawable.pantaikuta),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(220.dp)
